@@ -1,26 +1,58 @@
 const Book = (props) => {
     return (
-        <div>
+        <div className="answer">
             <h4>{props.title}</h4>
         </div>
     );
 }
+/* deprectated in React 15.5
 Book.propTypes = {
-    title: React.PropTypes.string.isRequired
+    title: PropTypes.string.isRequired
 }
+*/
 
-const Quiz = (props) => {
-    return (
-        <div>
-            {props.books.map((title, i) =>
-                <Book key={i} title={title} />
-            )}
-        </div>
-    );
+class Quiz extends React.Component {
+    state = Quiz.selectQuiz(data);
+
+    static selectQuiz = (data) => {
+        let books = _.shuffle(data.reduce((p,c,i) => {
+            return p.concat(c.books);
+        }, [])).slice(0,4);
+
+        let answer = books[_.random(books.length-1)];
+
+        return {
+            books: books,
+            author: _.find(data, (author) => {
+                return author.books.some((title) => {
+                    return title === answer;
+                })
+            })
+        };
+    }
+
+    render() {
+        return (
+            <div className="row">
+                <div className="col-md-4">
+                    <img src={this.state.author.imageUrl} className="authorimage" />
+                </div>
+                <div className="col-md-7">
+                    {this.state.books.map((title, i) =>
+                        <Book key={i} title={title} />
+                    )}
+                </div>
+                <div className="col-md-1">
+                </div>
+            </div>
+        );
+    }
 }
+/* deprecated in React 15.5
 Quiz.propTypes = {
     books: React.PropTypes.array.isRequired
 }
+*/
 
 const data = [
     {
@@ -63,6 +95,6 @@ const data = [
 ]
 
 ReactDOM.render(
-    <Quiz  books={['The Lord of The Rings','The Iliad']} />,
+    <Quiz data={data} />,
     document.getElementById('app')
 );
