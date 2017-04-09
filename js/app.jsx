@@ -12,8 +12,7 @@ Book.propTypes = {
 */
 
 class Quiz extends React.Component {
-    state = Quiz.selectQuiz(data);
-
+    
     static selectQuiz = (data) => {
         let books = _.shuffle(data.reduce((p,c,i) => {
             return p.concat(c.books);
@@ -30,6 +29,8 @@ class Quiz extends React.Component {
             })
         };
     }
+
+    state = Quiz.selectQuiz(this.props.data);
 
     render() {
         return (
