@@ -35,15 +35,15 @@ class Quiz extends React.Component {
     render() {
         return (
             <div className="row">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                     <img src={this.state.author.imageUrl} className="authorimage" />
                 </div>
-                <div className="col-md-7">
+                <div className="col-sm-7">
                     {this.state.books.map((title, i) =>
                         <Book key={i} title={title} />
                     )}
                 </div>
-                <div className="col-md-1">
+                <div className="col-sm-1">
                 </div>
             </div>
         );
