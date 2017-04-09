@@ -51,6 +51,10 @@ class Quiz extends React.Component {
 
     newQuiz = () => this.setState(Quiz.initialState(this.props.data));
 
+    addQuiz = () => {
+        routie('add');
+    }
+
     render() {
         return (
             <div>
@@ -76,6 +80,11 @@ class Quiz extends React.Component {
                         </div>
                     </div>
                 ) : <span />}
+                <div className="row">
+                    <div className="col-sm-12">
+                        <input onClick={this.addQuiz} id="AddGameButton" type="button" value="Add Game" className="btn " />
+                    </div>
+                </div>
             </div>
         );
     }
@@ -85,6 +94,43 @@ Quiz.propTypes = {
     books: React.PropTypes.array.isRequired
 }
 */
+
+class AddQuizForm extends React.Component {
+
+    submit = () => {
+        let data = this.props.quizFormSubmitted(getRefs(this));
+        return false;
+    }
+
+
+    render() {
+        return (
+            <div className="row">
+                <div className="col-sm-12">
+                    <h1>Add Quiz</h1>
+                    <form role="form" onSubmit={this.submit}>
+                        <div className="form-group">
+                            <input ref="imageUrl" type="text" className="form-control" placeholder="Image Url" />
+                        </div>
+                        <div className="form-group">
+                            <input ref="answer1" type="text" className="form-control" placeholder="Answer 1" />
+                        </div>
+                        <div className="form-group">
+                            <input ref="answer2" type="text" className="form-control" placeholder="Answer 2" />
+                        </div>
+                        <div className="form-group">
+                            <input ref="answer3" type="text" className="form-control" placeholder="Answer 3" />
+                        </div>
+                        <div className="form-group">
+                            <input ref="answer4" type="text" className="form-control" placeholder="Answer 4" />
+                        </div>
+                        <button type="submit" className="btn btn-default">Submit</button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+}
 
 const data = [
     {
@@ -126,7 +172,35 @@ const data = [
 
 ]
 
-ReactDOM.render(
-    <Quiz data={data} />,
-    document.getElementById('app')
-);
+const getRefs = (component) => {
+    let result = {};
+    Object.keys(component.refs)
+          .forEach( (refName) => {
+            result[refName] = ReactDOM.findDOMNode(component.refs[refName]).value;
+          })
+    return result;
+}
+
+const addQuizFormSubmitted = (formData) => {
+    let quizData = [{
+        imageUrl: formData.imageUrl,
+        books: [formData.answer1,formData.answer2,formData.answer3,formData.answer4]
+    }]
+
+    ReactDOM.render(
+        <Quiz data={quizData} />,
+        document.getElementById("app")
+    );
+}
+routie({
+    "": () => {
+        ReactDOM.render(
+            <Quiz data={data} />,
+            document.getElementById("app"));
+    },
+    "add": () => {
+        ReactDOM.render(
+            <AddQuizForm quizFormSubmitted={addQuizFormSubmitted}/>,
+            document.getElementById("app"));
+    }
+});
